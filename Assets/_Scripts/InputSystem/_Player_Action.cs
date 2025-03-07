@@ -17,6 +17,7 @@ public class _Player_Action : MonoBehaviour
 
 
     [Header("Fire, Shooting Stuff")]
+    
     [SerializeField] Transform _gunPointTransform;
     [SerializeField] float bulletSpeed;
 
