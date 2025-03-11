@@ -43,11 +43,11 @@ public class _Player_Action : MonoBehaviour
 
     void OnEnable()
     {
-        _move.Enable();
+        _move.Enable(); // Enable action 
         _rotate.Enable();
         _fire.Enable();
         _firePad.Enable();
-        _rotate.performed += OnRotate;
+        _rotate.performed += OnRotate; // Subcripe action 
         _rotate.canceled += OnRotateStop;
         _fire.performed += OnFire;
         _firePad.performed += OnFire;

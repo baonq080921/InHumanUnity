@@ -126,6 +126,15 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Value"",
+                    ""id"": ""6d1e30ce-01b0-47b9-93b1-481678c54633"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -238,6 +247,17 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
                     ""action"": ""FirePad"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bbe4806-5d35-470b-81e3-3955728eee0f"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -250,6 +270,7 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         m_Player_Rotation = m_Player.FindAction("Rotation", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_FirePad = m_Player.FindAction("FirePad", throwIfNotFound: true);
+        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
     }
 
     ~@ThirdPersonActionAssets()
@@ -334,6 +355,7 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
     private readonly InputAction m_Player_Rotation;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_FirePad;
+    private readonly InputAction m_Player_Aim;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -361,6 +383,10 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         /// Provides access to the underlying input action "Player/FirePad".
         /// </summary>
         public InputAction @FirePad => m_Wrapper.m_Player_FirePad;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Aim".
+        /// </summary>
+        public InputAction @Aim => m_Wrapper.m_Player_Aim;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -399,6 +425,9 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
             @FirePad.started += instance.OnFirePad;
             @FirePad.performed += instance.OnFirePad;
             @FirePad.canceled += instance.OnFirePad;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
         }
 
         /// <summary>
@@ -422,6 +451,9 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
             @FirePad.started -= instance.OnFirePad;
             @FirePad.performed -= instance.OnFirePad;
             @FirePad.canceled -= instance.OnFirePad;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
         }
 
         /// <summary>
@@ -490,5 +522,12 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFirePad(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Aim" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAim(InputAction.CallbackContext context);
     }
 }
