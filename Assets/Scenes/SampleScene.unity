@@ -181,6 +181,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4b1cae0bf67c22c449b05aa63c724ccd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 669440026}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4b1cae0bf67c22c449b05aa63c724ccd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 669440027}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4b1cae0bf67c22c449b05aa63c724ccd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 669440028}
   m_SourcePrefab: {fileID: 100100000, guid: 4b1cae0bf67c22c449b05aa63c724ccd, type: 3}
 --- !u!1 &211550017
 GameObject:
@@ -372,9 +378,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ce81ca619afdd4db5fb85065338736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDir: {x: 0, y: 0}
-  aimDir: {x: 0, y: 0}
-  rb: {fileID: 0}
+  moveInput: {x: 0, y: 0}
+  aimInput: {x: 0, y: 0}
+  characterController: {fileID: 669440027}
+  walkSpeed: 2
 --- !u!54 &669440026
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -402,6 +409,52 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!143 &669440027
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669440021}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0.02635198
+  m_Radius: 0.0047633755
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &669440028
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669440021}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.009526751, y: 0.013178225, z: 0.0024585454}
+  m_Center: {x: 0, y: 0.006586878, z: -0.00005927781}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

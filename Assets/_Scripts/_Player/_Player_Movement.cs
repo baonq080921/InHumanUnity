@@ -1,26 +1,29 @@
+using System.Data;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class _Player_Movement : MonoBehaviour
 {
 
-    [SerializeField] Vector2 moveDir;
-    [SerializeField] Vector2 aimDir;
 
-    [SerializeField] Rigidbody rb;
+    [SerializeField] Vector2 moveInput;
+    [SerializeField] Vector2 aimInput;
+    [SerializeField] CharacterController characterController;
+    private Vector3 moveDir;
+    [SerializeField] private float walkSpeed = 2f;
+
+    private Rigidbody rb;
     private ThirdPersonActionAssets playerActionAsset;
     void Awake(){
-
-        rb = GetComponent<Rigidbody>();
         playerActionAsset = new ThirdPersonActionAssets();
         playerActionAsset.Player.Fire.performed += ctx => Shoot();
         //================Movement ======================
-        playerActionAsset.Player.Move.performed += ctx => moveDir = ctx.ReadValue<Vector2>();
-        playerActionAsset.Player.Move.canceled += ctx => moveDir = Vector2.zero;
+        playerActionAsset.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        playerActionAsset.Player.Move.canceled += ctx => moveInput = Vector2.zero;
  
         //===============Aim==============
-        playerActionAsset.Player.Aim.performed += ctx => aimDir = ctx.ReadValue<Vector2>();
-        playerActionAsset.Player.Aim.canceled += ctx => aimDir = Vector2.zero;
+        playerActionAsset.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
+        playerActionAsset.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
     }
 
     void OnEnable()
@@ -36,12 +39,17 @@ public class _Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        moveDir = new Vector3(moveInput.x,0,moveInput.y);
+
+       if(moveDir.magnitude > 0){
+        characterController.Move(moveDir * walkSpeed * Time.deltaTime );
+       }
         
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(moveDir.x,0, moveDir.y);
+       
     }
 
     void Shoot(){
