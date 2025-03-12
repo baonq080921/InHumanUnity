@@ -5,7 +5,6 @@ using UnityEngine.InputSystem.Utilities;
 
 public class _Player_Movement : MonoBehaviour
 {
-    private const string V = "Animation";
     private ThirdPersonActionAssets playerActionAsset;
     [SerializeField] Vector2 moveInput;
     [SerializeField] Vector2 aimInput;
@@ -23,17 +22,18 @@ public class _Player_Movement : MonoBehaviour
     [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] float _aimSpeed;
     [SerializeField] private Transform _aimTransform;
+    [SerializeField] private Transform _playerMainTransform;
 
     [Header("animation")]
     private Animator animator;
     [SerializeField] float dapTime = 1f;
-
+    private float
 
     
 
     void Awake(){
         playerActionAsset = new ThirdPersonActionAssets();
-        playerActionAsset.Player.Fire.performed += ctx => Shoot();
+        playerActionAsset.Player.Fire.performed += ctx =>{Debug.Log(ctx);};
         //================Movement ======================
         playerActionAsset.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         playerActionAsset.Player.Move.canceled += ctx => moveInput = Vector2.zero;
@@ -91,19 +91,20 @@ public class _Player_Movement : MonoBehaviour
     }
     void Shoot(){
         Debug.Log("Shoot");
+        animator.SetTrigger("isShooting");
     }
 
     void ApplyAim(){
         Ray ray = Camera.main.ScreenPointToRay(aimInput);
         RaycastHit hit;
         if(Physics.Raycast(ray,out hit,Mathf.Infinity,_aimLayerMask)){
-            Vector3 lookingDir = hit.point - transform.position;
+            Vector3 lookingDir = hit.point - _playerMainTransform.position;
             lookingDir.y = 0f;
             lookingDir.Normalize();
              Quaternion targetRotation = Quaternion.LookRotation(lookingDir);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
-            // transform.forward = lookingDir;
-            // _aimTransform.position = new Vector3(hit.point.x,transform.position.y,hit.point.z);
+            _playerMainTransform.rotation = Quaternion.Lerp(_playerMainTransform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
+            
+            _aimTransform.position = new Vector3(hit.point.x,_playerMainTransform.position.y+.5f,hit.point.z);
         }
     }
 

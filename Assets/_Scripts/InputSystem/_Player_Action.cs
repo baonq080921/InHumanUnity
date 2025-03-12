@@ -5,23 +5,13 @@ using UnityEngine.InputSystem.Utilities;
 
 public class _Player_Action : MonoBehaviour
 {
-    [SerializeField] Rigidbody rb;
-
     // Player Input System:
     private ThirdPersonActionAssets playerActionAsset;
+    [SerializeField] CharacterController characterController;
     private InputAction _move;
     private InputAction _fire;
     private InputAction _firePad;
     private InputAction _rotate;
-
-    [Header("Tank Tower Stuff")]
-    [SerializeField] Transform _tankTowerTransform;
-    [SerializeField] Transform _aimTransform;
-
-    [Header("Fire, Shooting Stuff")]
-    [SerializeField] Transform _gunPointTransform;
-    [SerializeField] float bulletSpeed;
-    [SerializeField] GameObject bulletPrefab;
 
     // Data fields:
     private Vector2 moveDir;
@@ -29,16 +19,21 @@ public class _Player_Action : MonoBehaviour
     [SerializeField] float rotateSpeed = 10f;
     [SerializeField] float speed = 10f;
     [SerializeField] LayerMask whatIsLayer;
+    [SerializeField] Transform _aimTransform;
     private bool isUsingGamepad = false;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         playerActionAsset = new ThirdPersonActionAssets();
         _move = playerActionAsset.Player.Move;
         _fire = playerActionAsset.Player.Fire;
         _rotate = playerActionAsset.Player.Rotation;
         _firePad = playerActionAsset.Player.FirePad;
+    }
+
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
     }
 
     void OnEnable()
@@ -49,8 +44,8 @@ public class _Player_Action : MonoBehaviour
         _firePad.Enable();
         _rotate.performed += OnRotate; // Subcripe action 
         _rotate.canceled += OnRotateStop;
-        _fire.performed += OnFire;
-        _firePad.performed += OnFire;
+        // _fire.performed += OnFire;
+        // _firePad.performed += OnFire;
 
         // Phát hiện nếu sử dụng Gamepad
         InputSystem.onAnyButtonPress.CallOnce(ctrl => {
@@ -105,8 +100,8 @@ public class _Player_Action : MonoBehaviour
             float targetAngle = Mathf.Atan2(rotateDir.x, rotateDir.y) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
 
-            _tankTowerTransform.rotation = Quaternion.RotateTowards(
-                _tankTowerTransform.rotation,
+            this.transform.rotation = Quaternion.RotateTowards(
+                this.transform.rotation,
                 targetRotation,
                 rotateSpeed * Time.deltaTime * 10f
             );
@@ -116,10 +111,10 @@ public class _Player_Action : MonoBehaviour
     // --- Quay bằng Chuột ---
     private void TowerRotationMouse()
     {
-        Vector3 direction = _aimTransform.position - _tankTowerTransform.position;
+        Vector3 direction = _aimTransform.position - this.transform.position;
         direction.y = 0;
         Quaternion targetDirection = Quaternion.LookRotation(direction);
-        _tankTowerTransform.rotation = Quaternion.RotateTowards(_tankTowerTransform.rotation, targetDirection, rotateSpeed);
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetDirection, rotateSpeed);
     }
 
     private void BodyRotation()
@@ -130,24 +125,24 @@ public class _Player_Action : MonoBehaviour
     private void ApplyMovement()
     {
         Vector3 movement = transform.forward * speed * moveDir.y;
-        rb.linearVelocity = movement;
+        characterController.Move(movement);
     }
 
     // --- Xử lý bắn ---
-    private void OnFire(InputAction.CallbackContext ctx)
-    {
-        Fire();
-    }
+    // private void OnFire(InputAction.CallbackContext ctx)
+    // {
+    //     Fire();
+    // }
 
-    private void Fire()
-    {
-        Debug.Log("Fire");
+    // private void Fire()
+    // {
+    //     Debug.Log("Fire");
 
-        GameObject bullet = Instantiate(bulletPrefab, _gunPointTransform.position, _gunPointTransform.rotation);
-        bullet.GetComponent<Rigidbody>().linearVelocity = _gunPointTransform.forward * bulletSpeed;
+    //     GameObject bullet = Instantiate(bulletPrefab, _gunPointTransform.position, _gunPointTransform.rotation);
+    //     bullet.GetComponent<Rigidbody>().linearVelocity = _gunPointTransform.forward * bulletSpeed;
 
-        Destroy(bullet, 0.5f);
-    }
+    //     Destroy(bullet, 0.5f);
+    // }
 
     // --- Xử lý Input từ Gamepad ---
     void OnRotate(InputAction.CallbackContext context)
