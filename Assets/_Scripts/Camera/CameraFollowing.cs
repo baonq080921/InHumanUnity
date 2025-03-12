@@ -11,10 +11,10 @@ public class CameraFollowinng : MonoBehaviour
 
 
     //Updating Camera follow player
-    void Update()
+    void LateUpdate()
     {
         Vector3 newPos = new Vector3(target.position.x + xOffset,target.position.y + yOffSet, target.position.z + zOffset);
-        this.transform.position = Vector3.Slerp(this.transform.position,newPos,followSpeed * Time.deltaTime);
+        this.transform.position = Vector3.Lerp(this.transform.position,newPos,followSpeed * Time.deltaTime);
     }
 }
 

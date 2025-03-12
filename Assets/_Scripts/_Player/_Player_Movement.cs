@@ -5,9 +5,8 @@ using UnityEngine.InputSystem.Utilities;
 
 public class _Player_Movement : MonoBehaviour
 {
-
+    private const string V = "Animation";
     private ThirdPersonActionAssets playerActionAsset;
-    private Rigidbody rb;
     [SerializeField] Vector2 moveInput;
     [SerializeField] Vector2 aimInput;
     [SerializeField] CharacterController characterController;
@@ -24,6 +23,10 @@ public class _Player_Movement : MonoBehaviour
     [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] float _aimSpeed;
     [SerializeField] private Transform _aimTransform;
+
+    [Header("animation")]
+    private Animator animator;
+    [SerializeField] float dapTime = 1f;
 
 
     
@@ -42,7 +45,7 @@ public class _Player_Movement : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void OnEnable()
@@ -65,6 +68,7 @@ public class _Player_Movement : MonoBehaviour
     {
         ApplyMovement();
         ApplyAim();
+        AnimatorController();
     }
 
 
@@ -96,11 +100,20 @@ public class _Player_Movement : MonoBehaviour
             Vector3 lookingDir = hit.point - transform.position;
             lookingDir.y = 0f;
             lookingDir.Normalize();
-            Quaternion targetRotation = Quaternion.LookRotation(lookingDir);
-            transform.rotation = Quaternion.Lerp(transform.rotation,targetRotation,_aimSpeed);
-
-            _aimTransform.position = new Vector3(hit.point.x,transform.position.y,hit.point.z);
+             Quaternion targetRotation = Quaternion.LookRotation(lookingDir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
+            // transform.forward = lookingDir;
+            // _aimTransform.position = new Vector3(hit.point.x,transform.position.y,hit.point.z);
         }
+    }
+
+
+    void AnimatorController(){
+        float xVelocity = Vector3.Dot(moveDir.normalized,transform.right);
+        float yVelocity = Vector3.Dot(moveDir.normalized, transform.forward);
+        animator.SetFloat("xVelocity",xVelocity,dapTime,Time.deltaTime);
+        animator.SetFloat("yVelocity",yVelocity,dapTime,Time.deltaTime);
+
     }
 
 }
