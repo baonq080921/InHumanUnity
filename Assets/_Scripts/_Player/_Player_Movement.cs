@@ -33,7 +33,7 @@ public class _Player_Movement : MonoBehaviour
 
     void Awake(){
         playerActionAsset = new ThirdPersonActionAssets();
-        playerActionAsset.Player.Fire.performed += ctx =>{Debug.Log(ctx);};
+        playerActionAsset.Player.Fire.performed += ctx => Shoot();
         //================Movement ======================
         playerActionAsset.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         playerActionAsset.Player.Move.canceled += ctx => moveInput = Vector2.zero;
