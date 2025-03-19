@@ -946,14 +946,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1633140711}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.27706298, z: 0, w: 0.9608518}
-  m_LocalPosition: {x: -3.757, y: 5.223, z: -1.7198701}
+  m_LocalRotation: {x: -0, y: -0.52185684, z: -0, w: 0.85303307}
+  m_LocalPosition: {x: -3.4095259, y: 5.223, z: -2.0677881}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 543450652710554415}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -32.17, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -62.914, z: 0}
 --- !u!114 &1633140714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -966,9 +966,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ce81ca619afdd4db5fb85065338736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterController: {fileID: 1633140712}
   moveInput: {x: 0, y: 0}
   aimInput: {x: 0, y: 0}
-  characterController: {fileID: 1633140712}
   walkSpeed: 2
   gravityScale: 9.81
   _aimLayerMask:
