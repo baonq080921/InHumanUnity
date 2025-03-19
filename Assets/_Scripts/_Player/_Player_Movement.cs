@@ -73,7 +73,6 @@ public class _Player_Movement : MonoBehaviour
     void ApplyInputEvents()
     {
         controller = player.controls;
-        controller.Player.Fire.performed += ctx => Shoot();
         controller.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controller.Player.Move.canceled += ctx => moveInput = Vector2.zero;
         controller.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
@@ -107,10 +106,7 @@ public class _Player_Movement : MonoBehaviour
     }
 
 
-    void Shoot(){
-        Debug.Log("Shoot");
-        animator.SetTrigger("isShooting");
-    }
+    
 
     void ApplyAim(){
         Ray ray = Camera.main.ScreenPointToRay(aimInput);
