@@ -144,15 +144,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Weapon"",
-                    ""type"": ""Value"",
-                    ""id"": ""eb25b071-ce33-49a9-bbb4-0de9722cdd55"",
-                    ""expectedControlType"": ""Double"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -287,50 +278,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d6cd3154-f361-419d-8abb-64a7d924552a"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""aafa0eb6-1a9e-4dff-b5fc-46f89de80fdc"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""17556dd6-e514-42a5-b147-ea71ee148fff"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""91badf0d-0229-4fb6-829d-bd7b1b71201b"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -345,7 +292,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         m_Player_FirePad = m_Player.FindAction("FirePad", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_Weapon = m_Player.FindAction("Weapon", throwIfNotFound: true);
     }
 
     ~@ThirdPersonActionAssets()
@@ -432,7 +378,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
     private readonly InputAction m_Player_FirePad;
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_Weapon;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -468,10 +413,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         /// Provides access to the underlying input action "Player/Run".
         /// </summary>
         public InputAction @Run => m_Wrapper.m_Player_Run;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Weapon".
-        /// </summary>
-        public InputAction @Weapon => m_Wrapper.m_Player_Weapon;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -516,9 +457,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
-            @Weapon.started += instance.OnWeapon;
-            @Weapon.performed += instance.OnWeapon;
-            @Weapon.canceled += instance.OnWeapon;
         }
 
         /// <summary>
@@ -548,9 +486,6 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
-            @Weapon.started -= instance.OnWeapon;
-            @Weapon.performed -= instance.OnWeapon;
-            @Weapon.canceled -= instance.OnWeapon;
         }
 
         /// <summary>
@@ -633,12 +568,5 @@ public partial class @ThirdPersonActionAssets: IInputActionCollection2, IDisposa
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRun(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Weapon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWeapon(InputAction.CallbackContext context);
     }
 }
