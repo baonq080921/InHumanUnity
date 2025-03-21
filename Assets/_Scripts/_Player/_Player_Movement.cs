@@ -124,14 +124,6 @@ public class _Player_Movement : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(aimInput);
-        Color rayColor = Color.red;
-        Debug.DrawRay(ray.origin, ray.direction,rayColor);
-
-    }
-
 
     void AnimatorController(){
         //checking direction of the player:
