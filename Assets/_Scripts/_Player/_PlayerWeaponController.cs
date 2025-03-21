@@ -22,7 +22,7 @@ public class _PlayerWeaponController : MonoBehaviour
         Debug.Log("Shoot");
         animator.SetTrigger("isShooting");
         GameObject bullet = Instantiate(bulletPrefab,pistolGunPoint.position,pistolGunPoint.rotation);
-        bullet.GetComponent<Rigidbody>().linearVelocity = pistolGunPoint.forward * bulletSpeed; 
+        bullet.GetComponent<Rigidbody>().linearVelocity = pistolGunPoint.forward * bulletSpeed ; 
 
         Destroy(bullet,1f);
     }
