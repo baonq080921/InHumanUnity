@@ -175,7 +175,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: WeaponGrab
+    m_ConditionEvent: isReloading
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: isGrabing
@@ -845,7 +845,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 0899177a95bf16a4ea089a532367de1b, type: 3}
+    m_Motion: {fileID: 7400000, guid: 829e54f64292bcc4b9ddf998e018411d, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -853,7 +853,7 @@ BlendTree:
     m_DirectBlendParameter: xVelocity
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 9957b81ae188ff14b8e65db8d7626537, type: 3}
+    m_Motion: {fileID: 7400000, guid: 80e6317885aa23f479fdbf81004a7a88, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -876,7 +876,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 0899177a95bf16a4ea089a532367de1b, type: 3}
+    m_Motion: {fileID: 7400000, guid: 829e54f64292bcc4b9ddf998e018411d, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -884,7 +884,7 @@ BlendTree:
     m_DirectBlendParameter: xVelocity
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 9957b81ae188ff14b8e65db8d7626537, type: 3}
+    m_Motion: {fileID: 7400000, guid: 80e6317885aa23f479fdbf81004a7a88, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1004,7 +1004,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 0899177a95bf16a4ea089a532367de1b, type: 3}
+    m_Motion: {fileID: 7400000, guid: 829e54f64292bcc4b9ddf998e018411d, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1012,7 +1012,7 @@ BlendTree:
     m_DirectBlendParameter: xVelocity
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 9957b81ae188ff14b8e65db8d7626537, type: 3}
+    m_Motion: {fileID: 7400000, guid: 80e6317885aa23f479fdbf81004a7a88, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1

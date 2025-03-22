@@ -12,4 +12,9 @@ public class PlayerAnimationEvent : MonoBehaviour
     public void ReloadIsOver(){
         weaponVisualController.ReturnRigWeightOne();
     }
+
+    public void GrabIsOver(){
+        weaponVisualController.ReturnRigWeightOne();
+        weaponVisualController.ReturnIkWeightOne();
+    }
 }

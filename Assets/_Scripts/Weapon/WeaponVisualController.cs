@@ -4,6 +4,7 @@ using UnityEngine.Animations.Rigging;
 
 public class WeaponVisualController : MonoBehaviour
 {
+
     [Header("InputSystem")]
     private ThirdPersonActionAssets controls;
     private Player player;
@@ -20,17 +21,17 @@ public class WeaponVisualController : MonoBehaviour
     private Transform currentGun;
 
 
+
     [Header("Left Hand")]
     [SerializeField]Transform leftHand;
-    [SerializeField] Transform rightHand;
+
 
     [Header("Reload")]
-    private bool isReloading;
+    private bool rigShouldIncrease;
     [SerializeField] float ReloadSmoothSpeed = 0.5f;    
 
     [Header("Grab")]
     [SerializeField] TwoBoneIKConstraint leftHand_IK;
-    [SerializeField] TwoBoneIKConstraint rightHand_IK;
     private enum weapongGrab{sideGrab, backGrab};
     private bool grabGunShouldIncrease;
     [SerializeField] float smoothGrabSpeed  = 0.5f;
@@ -39,14 +40,12 @@ public class WeaponVisualController : MonoBehaviour
 
     void Start()
     {
-        isReloading = true;
-        grabGunShouldIncrease = true;
         player = GetComponent<Player>();
         rig = GetComponentInChildren<Rig>();
         controls = player.controls;
         controls.Player.Reload.performed += ctx =>{
             animator.SetTrigger("isReloading");
-            rig.weight = 0f;
+            PauseRig();
         };
         animator = GetComponentInChildren<Animator>();
         EnableGunVisual(pistolTransform);
@@ -59,21 +58,26 @@ public class WeaponVisualController : MonoBehaviour
         CheckWeapongSwitch();
         CheckReload();
         CheckGrabGunBack();
+        Debug.Log(grabGunShouldIncrease);
         
     }
 
     void CheckReload(){
-        if(isReloading){
+        if(rigShouldIncrease){
             rig.weight += ReloadSmoothSpeed * Time.deltaTime;
         }
-        if(rig.weight > 1f){
-            isReloading = false;
+        if(rig.weight >= 1f){
+            rigShouldIncrease = false;
+            Debug.Log("1213131u3i1u");
         }
     }
-
     public void ReturnRigWeightOne() {
-        isReloading = true;
+        rigShouldIncrease = true;
         }
+
+    public void ReturnIkWeightOne(){
+        grabGunShouldIncrease = true;
+    }
 
     //Checking Weapong Switching toggle between keycap {1,2,3,4}
     private void CheckWeapongSwitch()
@@ -125,7 +129,6 @@ public class WeaponVisualController : MonoBehaviour
         gun.gameObject.SetActive(true);
         currentGun = gun;
        LeftHandTargetTransform();
-       RightHandTargetTranform();
     }
 
 
@@ -143,14 +146,6 @@ public class WeaponVisualController : MonoBehaviour
         leftHand.localRotation = leftHandGunTransform.localRotation;
     }
 
-    void RightHandTargetTranform(){
-        Transform rightHandGunTransform = currentGun.GetComponentInChildren<RightHandTargetTransform>().transform;
-        if(rightHandGunTransform == null){
-            return;
-        }
-        rightHand.localPosition = rightHandGunTransform.localPosition;
-        rightHand.localRotation = rightHandGunTransform.localRotation;
-    }
 
     // Switch the layer of the Animator with the index from 1 to n;
     void SwithAnimatorLayer(int layerIndex){
@@ -160,19 +155,27 @@ public class WeaponVisualController : MonoBehaviour
         animator.SetLayerWeight(layerIndex,1);
     }
 
-    void SwitchingGun(float weaponGrabFloat){
-        animator.SetFloat("weaponTypeGrab",weaponGrabFloat);
+    void SwitchingGun(float weaponGrabFloat)
+    {
+        animator.SetFloat("weaponTypeGrab", weaponGrabFloat);
         animator.SetTrigger("WeaponGrab");
         leftHand_IK.weight = 0.15f;
-        rightHand_IK.weight = 0.15f;
+        grabGunShouldIncrease = true;
+        PauseRig();
+
+    }
+
+    private void PauseRig()
+    {
+        rig.weight = 0;
     }
 
     void CheckGrabGunBack(){
         if(grabGunShouldIncrease){
-             leftHand_IK.weight += smoothGrabSpeed * Time.deltaTime;
-            rightHand_IK.weight += smoothGrabSpeed * Time.deltaTime;
+            leftHand_IK.weight += smoothGrabSpeed * Time.deltaTime;
+            rigShouldIncrease = true;
         }
-        if(leftHand_IK.weight > 1f && rightHand_IK.weight > 1f){
+        if(leftHand_IK.weight >= 1f){
             grabGunShouldIncrease = false;
         }
     }

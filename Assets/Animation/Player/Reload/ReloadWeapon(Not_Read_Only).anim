@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ReloadWeapon
+  m_Name: ReloadWeapon(Not_Read_Only)
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
