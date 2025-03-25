@@ -10,11 +10,19 @@ public class PlayerAnimationEvent : MonoBehaviour
     }
 
     public void ReloadIsOver(){
-        weaponVisualController.ReturnRigWeightOne();
+        weaponVisualController.ReturnRigWeightToOne();
+        Debug.Log("Hello this is reload");
     }
 
-    public void GrabIsOver(){
-        weaponVisualController.ReturnRigWeightOne();
-        weaponVisualController.ReturnIkWeightOne();
+    public void ReturnRig()
+    {
+        Debug.Log("Hello this is Return Rig Function");
+        weaponVisualController.ReturnLeftHand_IkWeightToOne();
+        weaponVisualController.ReturnRigWeightToOne();
+    }
+
+    public void WeaponGrabingIsOver(){
+        weaponVisualController.SetBusyGrabingWeapon(false);
+        Debug.Log("Hello World");
     }
 }
