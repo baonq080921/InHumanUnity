@@ -65,7 +65,7 @@ public class _Player_Movement : MonoBehaviour
     void FixedUpdate()
     {
         ApplyMovement();
-        ApplyAim();
+        ApplyRotation();
         AnimatorController();
     }
 
@@ -76,8 +76,6 @@ public class _Player_Movement : MonoBehaviour
         controller = player.controls;
         controller.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controller.Player.Move.canceled += ctx => moveInput = Vector2.zero;
-        controller.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
-        controller.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
         controller.Player.Run.performed += ctx =>{
             isRunning = true;
             if(isRunning) speed = runSpeed;
@@ -109,18 +107,13 @@ public class _Player_Movement : MonoBehaviour
 
     
 
-    void ApplyAim(){
-        Ray ray = Camera.main.ScreenPointToRay(aimInput);
-        RaycastHit hit;
-        if(Physics.Raycast(ray,out hit,Mathf.Infinity,_aimLayerMask)){
-            Vector3 lookingDir = hit.point - _playerMainTransform.position;
+    void ApplyRotation(){
+            Vector3 lookingDir = player.aim.getMousePosition() - _playerMainTransform.position;
             lookingDir.y = 0f;
             lookingDir.Normalize();
              Quaternion targetRotation = Quaternion.LookRotation(lookingDir);
-            _playerMainTransform.rotation = Quaternion.Lerp(_playerMainTransform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
+            _playerMainTransform.rotation = Quaternion.Slerp(_playerMainTransform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
             
-            _aimTransform.position = new Vector3(hit.point.x,_playerMainTransform.position.y+.5f,hit.point.z);
-        }
     }
 
 
