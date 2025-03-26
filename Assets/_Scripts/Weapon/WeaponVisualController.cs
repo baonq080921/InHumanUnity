@@ -191,7 +191,7 @@ public class WeaponVisualController : MonoBehaviour
     public void SetBusyGrabingWeapon( bool busy)
     {
         busyGrabingWeapon = busy;
-        animator.SetBool("isGrabing", busyGrabingWeapon);
+        animator.SetBool("BusyGrabingWeapon", busyGrabingWeapon);
         Debug.Log(busyGrabingWeapon);
     }
 }
