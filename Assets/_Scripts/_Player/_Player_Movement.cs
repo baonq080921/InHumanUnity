@@ -120,7 +120,6 @@ public class _Player_Movement : MonoBehaviour
             _playerMainTransform.rotation = Quaternion.Lerp(_playerMainTransform.rotation, targetRotation, _aimSpeed * Time.deltaTime);
             
             _aimTransform.position = new Vector3(hit.point.x,_playerMainTransform.position.y+.5f,hit.point.z);
-            Debug.Log(hit);
         }
     }
 

@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TopShooter-InHuman.sln"
+    "dotnet.defaultSolution": "InHumanUnity.sln"
 }
