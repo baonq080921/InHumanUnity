@@ -1121,7 +1121,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670221a88509bce4e821299812e19b62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunTransfom: []
+  gunTransfom:
+  - {fileID: 922976221480758864}
+  - {fileID: 6783855978343875396}
+  - {fileID: 5227359196511467032}
+  - {fileID: 3449412235583873740}
+  - {fileID: 9069003874773933075}
   pistolTransform: {fileID: 922976221480758864}
   rifleTransform: {fileID: 6783855978343875396}
   revolverTransform: {fileID: 5227359196511467032}
