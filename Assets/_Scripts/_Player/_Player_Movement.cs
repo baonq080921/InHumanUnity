@@ -14,7 +14,7 @@ public class _Player_Movement : MonoBehaviour
     private Player player;
 
 
-    [SerializeField] Vector2 moveInput;
+    public Vector2 moveInput{get; private set;}
     [SerializeField] Vector2 aimInput;
     [SerializeField] float speed;
 
@@ -108,7 +108,7 @@ public class _Player_Movement : MonoBehaviour
     
 
     void ApplyRotation(){
-            Vector3 lookingDir = player.aim.getMousePosition() - _playerMainTransform.position;
+            Vector3 lookingDir = player.aim.getMouseHitInfo().point - _playerMainTransform.position;
             lookingDir.y = 0f;
             lookingDir.Normalize();
              Quaternion targetRotation = Quaternion.LookRotation(lookingDir);

@@ -7,11 +7,26 @@ public class PlayerAim : MonoBehaviour
     private ThirdPersonActionAssets controls;
     private Vector2 aimInput;
 
-    [Header("Aim Info")]
+    [Range(0f,5f)]
+    [SerializeField] private float minCameraDistance = 1.5f;
+
+    [Range(0f,5f)]
+    [SerializeField] private float maxCameraDistance = 4f;
+
+    [Range(3f,5f)]   
+    [SerializeField] private float _cameraSensetivity = 5f;
+
+    [Space]
+    private RaycastHit lastKnowMouseHitInfo;
+    [Header("Camera Control")]
     [SerializeField] private LayerMask _aimLayerMask;
-    [SerializeField] Transform _aimTransform;
+    [SerializeField] Transform camearaTarget;
     [SerializeField] private Transform _playerMainTransform;
     [SerializeField] public float _aimSpeed = 10f;
+
+    [Header("Aim Info")]
+    [SerializeField] Transform aim;
+
 
 
     void Start()
@@ -22,8 +37,9 @@ public class PlayerAim : MonoBehaviour
 
     void Update()
     {
-        _aimTransform.position = new Vector3(player.aim.getMousePosition().x,_playerMainTransform.position.y+.5f,player.aim.getMousePosition().z);  
-
+        camearaTarget.position = Vector3.Lerp(camearaTarget.position, DesireCameraPosition(), _cameraSensetivity * Time.deltaTime);  
+        aim.position = getMouseHitInfo().point;
+        aim.position = new Vector3(aim.position.x, _playerMainTransform.position.y +0.5f, aim.position.z);
     }
 
 
@@ -34,11 +50,28 @@ public class PlayerAim : MonoBehaviour
         controls.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
     }
 
-    public Vector3 getMousePosition(){
+    public RaycastHit getMouseHitInfo(){
         Ray ray = Camera.main.ScreenPointToRay(aimInput);
         if(Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity,_aimLayerMask)){
-            return hitInfo.point;
+            lastKnowMouseHitInfo = hitInfo;
+            return hitInfo;
         }
-        return Vector3.zero;
+        return lastKnowMouseHitInfo;
     }
+
+
+    private Vector3 DesireCameraPosition(){
+        // change the maxdistance based on the character is moving forward or backward
+        float actualMaxCameraDistance = player.movement.moveInput.y  < .5f ? minCameraDistance : maxCameraDistance ;
+        Vector3 desireAimPosition = getMouseHitInfo().point;
+        Vector3 aimDirection = (desireAimPosition - _playerMainTransform.transform.position).normalized;
+        float distanceToDesirePosition = Vector3.Distance(_playerMainTransform.transform.position, desireAimPosition);
+        float clampDistance = Mathf.Clamp(distanceToDesirePosition, minCameraDistance, actualMaxCameraDistance);
+        desireAimPosition = _playerMainTransform.transform.position + aimDirection * clampDistance; 
+        desireAimPosition.y = _playerMainTransform.transform.position.y + 1;
+        Debug.Log(actualMaxCameraDistance);
+
+        return desireAimPosition;
+    }
+
 }

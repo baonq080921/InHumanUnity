@@ -21,7 +21,7 @@ public class _PlayerWeaponController : MonoBehaviour
     void Shoot(){
         Debug.Log("Shoot");
         animator.SetTrigger("isShooting");
-        GameObject bullet = Instantiate(bulletPrefab,pistolGunPoint.position,pistolGunPoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefab,pistolGunPoint.position,Quaternion.LookRotation(pistolGunPoint.forward));  
         bullet.GetComponent<Rigidbody>().linearVelocity = pistolGunPoint.forward * bulletSpeed ; 
 
         Destroy(bullet,1f);
