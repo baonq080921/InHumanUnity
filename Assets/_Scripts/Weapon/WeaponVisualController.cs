@@ -7,8 +7,9 @@ using UnityEngine.InputSystem;
 public class WeaponVisualController : MonoBehaviour
 {
 
-    [Header("InputSystem")]
     private ThirdPersonActionAssets controls;
+
+    [Header("InputSystem")]
     private Player player;
     private Rig rig;
 
@@ -25,7 +26,7 @@ public class WeaponVisualController : MonoBehaviour
 
 
     [Header("Left Hand")]
-    [SerializeField]Transform leftHand;
+    [SerializeField]Transform leftHandIK_Target;
     [SerializeField] TwoBoneIKConstraint leftHand_IK;
     private enum weapongGrab{sideGrab, backGrab};
     private bool leftHand_IKShouldIncrease;
@@ -36,6 +37,7 @@ public class WeaponVisualController : MonoBehaviour
 
 
     [Header("Reload")]
+    [SerializeField] float rigIncreaseRate = .1f; 
     private bool rigShouldIncrease;
     [SerializeField] float rigIncreaseStep = 0.5f;    
 
@@ -60,9 +62,9 @@ public class WeaponVisualController : MonoBehaviour
 
     void Update()
     {
-        CheckWeapongSwitch();
+        CheckWeaponSwitch();
         UpdateRig();
-        UpdateLeftHand_IK();
+        UpdateLeftHandIKWeight();
         
     }
 
@@ -70,7 +72,8 @@ public class WeaponVisualController : MonoBehaviour
         if(rigShouldIncrease){
             rig.weight = Mathf.MoveTowards(rig.weight,1f,rigIncreaseStep * Time.deltaTime) ;
         }
-        if(rig.weight >= 1f){
+        if (rig.weight >= 1f)
+        {
             rigShouldIncrease = false;
         }
     }
@@ -78,8 +81,26 @@ public class WeaponVisualController : MonoBehaviour
 
     public void ReturnIkWeightOne() => leftHand_IKShouldIncrease = true;
 
+    private void UpdateLeftHand_IK()
+    {
+        if (leftHand_IKShouldIncrease)
+        {
+            leftHand_IK.weight = Mathf.MoveTowards(leftHand_IK.weight,1f,leftHandIK_IncreaseStep * Time.deltaTime);
+        }
+        if (leftHand_IK.weight >= 1f)
+        {
+            leftHand_IKShouldIncrease = false;
+            Debug.Log("LeftHandIK increase " + leftHand_IKShouldIncrease);
+        }
+    }
+
+    public void ReturnRigWeightToOne()=> rigShouldIncrease = true;
+
+    public void ReturnLeftHand_IkWeightToOne() => leftHand_IKShouldIncrease = true;
+
     //Checking Weapong Switching toggle between keycap {1,2,3,4}
-    private void CheckWeapongSwitch()
+    private void CheckWeaponSwitch(){
+    if (Input.anyKeyDown)
     {
         Dictionary<KeyCode,(Transform, int, weapongGrab)> keyInputMap = new Dictionary<KeyCode, (Transform,int,weapongGrab)>{
             {KeyCode.Alpha1,(pistolTransform,1,weapongGrab.sideGrab)},
@@ -98,6 +119,8 @@ public class WeaponVisualController : MonoBehaviour
             }
         }
     }
+}
+
 
 
     // Checking Gun Enable and Disable Gun Visual
@@ -119,8 +142,8 @@ public class WeaponVisualController : MonoBehaviour
     // Hand Transfromation for each weapon correspoding
     void LeftHandTargetTransform(){
         Transform leftHandGunTransform = currentGun.GetComponentInChildren<LeftHandTargetTransform>().transform;
-        leftHand.localPosition = leftHandGunTransform.localPosition;
-        leftHand.localRotation = leftHandGunTransform.localRotation;
+        leftHandIK_Target.localPosition = leftHandGunTransform.localPosition;
+        leftHandIK_Target.localRotation = leftHandGunTransform.localRotation;
     }
 
 
@@ -152,7 +175,7 @@ public class WeaponVisualController : MonoBehaviour
         rig.weight = 0f;
     }
 
-    void UpdateLeftHand_IK()
+    void UpdateLeftHandIKWeight()
     {
         if (leftHand_IKShouldIncrease)
         {
