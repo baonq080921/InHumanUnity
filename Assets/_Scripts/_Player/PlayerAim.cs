@@ -26,6 +26,8 @@ public class PlayerAim : MonoBehaviour
 
     [Header("Aim Info")]
     [SerializeField] Transform aim;
+    [SerializeField] private bool isAimingPrecisely;
+
 
 
 
@@ -37,9 +39,35 @@ public class PlayerAim : MonoBehaviour
 
     void Update()
     {
-        camearaTarget.position = Vector3.Lerp(camearaTarget.position, DesireCameraPosition(), _cameraSensetivity * Time.deltaTime);  
+
+        if(Input.GetKeyDown(KeyCode.P)){
+            isAimingPrecisely  = !isAimingPrecisely;
+        }
+        UpdateCameraPosition();
+        UpdateAimPositon();
+    }
+
+    private void UpdateCameraPosition()
+    {
+        camearaTarget.position = Vector3.Lerp(camearaTarget.position, DesireCameraPosition(), _cameraSensetivity * Time.deltaTime);
+    }
+
+    private void UpdateAimPositon()
+    {
         aim.position = getMouseHitInfo().point;
-        aim.position = new Vector3(aim.position.x, _playerMainTransform.position.y +0.5f, aim.position.z);
+        if (!isAimingPrecisely)
+        {
+            aim.position = new Vector3(aim.position.x, _playerMainTransform.position.y + 1f, aim.position.z);
+        }
+        Debug.Log("AIm position" + aim.position);
+
+    }
+
+    public bool CanAimPrecisely(){
+        if(isAimingPrecisely){
+            return true;
+        }
+        return false;
     }
 
 
