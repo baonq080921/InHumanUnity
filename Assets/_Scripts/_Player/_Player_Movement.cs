@@ -38,7 +38,6 @@ public class _Player_Movement : MonoBehaviour
 
 
     [Header("Aim Info")]
-    [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] float _aimSpeed;
     [SerializeField] private Transform _aimTransform;
     [SerializeField] private Transform _playerMainTransform;

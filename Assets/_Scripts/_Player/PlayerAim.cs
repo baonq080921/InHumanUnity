@@ -18,16 +18,20 @@ public class PlayerAim : MonoBehaviour
 
     [Space]
     private RaycastHit lastKnowMouseHitInfo;
+
     [Header("Camera Control")]
     [SerializeField] private LayerMask _aimLayerMask;
     [SerializeField] Transform camearaTarget;
     [SerializeField] private Transform _playerMainTransform;
-    [SerializeField] public float _aimSpeed = 10f;
 
     [Header("Aim Info")]
     [SerializeField] Transform aim;
+    [SerializeField] public float _aimSpeed = 10f;
     [SerializeField] private bool isAimingPrecisely;
-
+    [SerializeField] private bool isLockingToTarget;
+    
+    [Header("Aim Laser")]
+    [SerializeField] LineRenderer aimLaser;
 
 
 
@@ -43,8 +47,41 @@ public class PlayerAim : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.P)){
             isAimingPrecisely  = !isAimingPrecisely;
         }
+        if(Input.GetKeyDown(KeyCode.L)){
+            isLockingToTarget = !isLockingToTarget;
+        }
         UpdateCameraPosition();
         UpdateAimPositon();
+        UpdateLaserVisual();
+    }
+
+   public Transform Target(){
+        Transform target = null;
+        if(getMouseHitInfo().transform.GetComponent<Target>() != null){
+            target = getMouseHitInfo().transform;
+            Debug.Log("target positon"+target.position);
+        }
+        return target;
+    }
+
+
+
+    private void UpdateLaserVisual(){
+        float laserTipLength = .5f;
+        Transform gunPoint = player.weapon.GunPoint();
+        Vector3 aimLaserDirection = player.weapon.bulletDirection();
+        float laserDistance = 4f;
+        Vector3 endPoint = gunPoint.position + aimLaserDirection * laserDistance;
+
+        // CHeck if the laser hit the obstacle then update the endPoint to make the laser stop at the obstacle
+        if(Physics.Raycast(gunPoint.position,aimLaserDirection,out RaycastHit hitInfo,laserDistance,_aimLayerMask)){
+            endPoint = hitInfo.point;
+            laserTipLength = 0f;
+        }
+        aimLaser.SetPosition(0,gunPoint.position);
+        aimLaser.SetPosition(1,endPoint);
+        aimLaser.SetPosition(2,endPoint + aimLaserDirection * laserTipLength);
+
     }
 
     private void UpdateCameraPosition()
@@ -54,6 +91,14 @@ public class PlayerAim : MonoBehaviour
 
     private void UpdateAimPositon()
     {
+
+        //Locking to the target if the target is not null
+        Transform target = Target();
+        if(target != null && isLockingToTarget){
+            aim.position = target.position;
+            return;
+        }
+
         aim.position = getMouseHitInfo().point;
         if (!isAimingPrecisely)
         {
@@ -62,6 +107,8 @@ public class PlayerAim : MonoBehaviour
         Debug.Log("AIm position" + aim.position);
 
     }
+
+    public Transform Aim() => aim;
 
     public bool CanAimPrecisely(){
         if(isAimingPrecisely){
