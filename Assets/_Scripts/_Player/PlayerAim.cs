@@ -5,7 +5,7 @@ public class PlayerAim : MonoBehaviour
 
     private Player player;
     private ThirdPersonActionAssets controls;
-    private Vector2 aimInput;
+    private Vector2 mouseInput;
 
     [Range(0f,5f)]
     [SerializeField] private float minCameraDistance = 1.5f;
@@ -59,7 +59,7 @@ public class PlayerAim : MonoBehaviour
         Transform target = null;
         if(getMouseHitInfo().transform.GetComponent<Target>() != null){
             target = getMouseHitInfo().transform;
-            Debug.Log("target positon"+target.position);
+            // Debug.Log("target positon"+target.position);
         }
         return target;
     }
@@ -84,10 +84,7 @@ public class PlayerAim : MonoBehaviour
 
     }
 
-    private void UpdateCameraPosition()
-    {
-        camearaTarget.position = Vector3.Lerp(camearaTarget.position, DesireCameraPosition(), _cameraSensetivity * Time.deltaTime);
-    }
+    
 
     private void UpdateAimPositon()
     {
@@ -95,16 +92,19 @@ public class PlayerAim : MonoBehaviour
         //Locking to the target if the target is not null
         Transform target = Target();
         if(target != null && isLockingToTarget){
-            aim.position = target.position;
+            if(target.GetComponent<Renderer>() != null) aim.position = target.GetComponent<Renderer>().bounds.center;
+            else aim.position = target.position;
             return;
         }
+
+        
 
         aim.position = getMouseHitInfo().point;
         if (!isAimingPrecisely)
         {
             aim.position = new Vector3(aim.position.x, _playerMainTransform.position.y + 1f, aim.position.z);
         }
-        Debug.Log("AIm position" + aim.position);
+        // Debug.Log("AIm position" + aim.position);
 
     }
 
@@ -121,12 +121,12 @@ public class PlayerAim : MonoBehaviour
     private void AssignInputEvent()
     {
         controls = player.controls;
-        controls.Player.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
-        controls.Player.Aim.canceled += ctx => aimInput = Vector2.zero;
+        controls.Player.Aim.performed += ctx => mouseInput = ctx.ReadValue<Vector2>();
+        controls.Player.Aim.canceled += ctx => mouseInput = Vector2.zero;
     }
 
     public RaycastHit getMouseHitInfo(){
-        Ray ray = Camera.main.ScreenPointToRay(aimInput);
+        Ray ray = Camera.main.ScreenPointToRay(mouseInput);
         if(Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity,_aimLayerMask)){
             lastKnowMouseHitInfo = hitInfo;
             return hitInfo;
@@ -135,6 +135,8 @@ public class PlayerAim : MonoBehaviour
     }
 
 
+
+#region Camera Region
     private Vector3 DesireCameraPosition(){
         // change the maxdistance based on the character is moving forward or backward
         float actualMaxCameraDistance = player.movement.moveInput.y  < .5f ? minCameraDistance : maxCameraDistance ;
@@ -144,9 +146,17 @@ public class PlayerAim : MonoBehaviour
         float clampDistance = Mathf.Clamp(distanceToDesirePosition, minCameraDistance, actualMaxCameraDistance);
         desireAimPosition = _playerMainTransform.transform.position + aimDirection * clampDistance; 
         desireAimPosition.y = _playerMainTransform.transform.position.y + 1;
-        Debug.Log(actualMaxCameraDistance);
+        // Debug.Log(actualMaxCameraDistance);
 
         return desireAimPosition;
     }
+
+
+    private void UpdateCameraPosition()
+    {
+        camearaTarget.position = Vector3.Lerp(camearaTarget.position, DesireCameraPosition(), _cameraSensetivity * Time.deltaTime);
+    }
+    
+#endregion
 
 }

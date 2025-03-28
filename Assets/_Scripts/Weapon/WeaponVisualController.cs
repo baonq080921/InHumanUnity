@@ -14,21 +14,17 @@ public class WeaponVisualController : MonoBehaviour
     private Rig rig;
 
     private Animator animator;
-    [Header("GunType")]
-    [SerializeField] Transform[] gunTransfom;
-    [SerializeField] Transform pistolTransform;
-    [SerializeField] Transform rifleTransform;
-    [SerializeField] Transform revolverTransform;
-    [SerializeField] Transform shotGunTransform;
-    [SerializeField] Transform sinperTransform;
-    private Transform currentGun;
-
+    
+    #region GunTransfrom region
+    [SerializeField] private WeaponModel[] weaponModels;
+    
+    #endregion
+    
 
 
     [Header("Left Hand")]
     [SerializeField]Transform leftHandIK_Target;
     [SerializeField] TwoBoneIKConstraint leftHand_IK;
-    private enum weapongGrab{sideGrab, backGrab};
     private bool leftHand_IKShouldIncrease;
     private bool busyGrabingWeapon;
     [SerializeField] float leftHandIK_IncreaseStep  = 0.5f;
@@ -46,25 +42,39 @@ public class WeaponVisualController : MonoBehaviour
     void Start()
     {
         player = GetComponent<Player>();
-        rig = GetComponentInChildren<Rig>();
-        controls = player.controls;
-        controls.Player.Reload.performed += ctx =>{
-            if(busyGrabingWeapon == false){
-            animator.SetTrigger("isReloading");
-            ReduceRig();
-            }
-        };
+        rig = GetComponentInChildren<Rig>();        
         animator = GetComponentInChildren<Animator>();
-        EnableGunVisual(pistolTransform);
-        SwithAnimatorLayer(1);
+        weaponModels = GetComponentsInChildren<WeaponModel>(true);
+    }
 
+
+    public WeaponModel GetCurrentWeaponModel()
+    {
+        WeaponModel weaponModel = null;
+        WeaponType weaponType =  player.weapon.CurrentWeapon().weaponType;
+        foreach (var item in weaponModels)
+        {
+            if(item.weaponType == weaponType)
+            {
+                weaponModel = item;
+            }
+        }
+        return weaponModel;
+    }
+    public  void PlayReloadAnimation()
+    {
+        if(busyGrabingWeapon) return;
+
+        animator.SetTrigger("isReloading");
+        ReduceRig();
     }
 
     void Update()
     {
-        CheckWeaponSwitch();
+        // CheckWeaponSwitch();
         UpdateRig();
         UpdateLeftHandIKWeight();
+        Debug.Log("Helloo");
         
     }
 
@@ -81,67 +91,55 @@ public class WeaponVisualController : MonoBehaviour
 
     public void ReturnIkWeightOne() => leftHand_IKShouldIncrease = true;
 
-    private void UpdateLeftHand_IK()
-    {
-        if (leftHand_IKShouldIncrease)
-        {
-            leftHand_IK.weight = Mathf.MoveTowards(leftHand_IK.weight,1f,leftHandIK_IncreaseStep * Time.deltaTime);
-        }
-        if (leftHand_IK.weight >= 1f)
-        {
-            leftHand_IKShouldIncrease = false;
-            Debug.Log("LeftHandIK increase " + leftHand_IKShouldIncrease);
-        }
-    }
-
+    
     public void ReturnRigWeightToOne()=> rigShouldIncrease = true;
 
     public void ReturnLeftHand_IkWeightToOne() => leftHand_IKShouldIncrease = true;
 
     //Checking Weapong Switching toggle between keycap {1,2,3,4}
-    private void CheckWeaponSwitch(){
-    if (Input.anyKeyDown)
-    {
-        Dictionary<KeyCode,(Transform, int, weapongGrab)> keyInputMap = new Dictionary<KeyCode, (Transform,int,weapongGrab)>{
-            {KeyCode.Alpha1,(pistolTransform,1,weapongGrab.sideGrab)},
-            {KeyCode.Alpha2,(rifleTransform,1,weapongGrab.backGrab)},
-            {KeyCode.Alpha3,(revolverTransform,1,weapongGrab.sideGrab)},
-            {KeyCode.Alpha4,(shotGunTransform,2,weapongGrab.backGrab)},
-            {KeyCode.Alpha5,(sinperTransform,3,weapongGrab.backGrab)},
-        };
+//     private void CheckWeaponSwitch(){
+//     if (Input.anyKeyDown)
+//     {
+//         Dictionary<KeyCode,(int, weapongGrab)> keyInputMap = new Dictionary<KeyCode, (int,weapongGrab)>{
+//             {KeyCode.Alpha1,(1,weapongGrab.sideGrab)},
+//             {KeyCode.Alpha2,(1,weapongGrab.backGrab)},
+//             {KeyCode.Alpha3,(1,weapongGrab.sideGrab)},
+//             {KeyCode.Alpha4,(2,weapongGrab.backGrab)},
+//             {KeyCode.Alpha5,(3,weapongGrab.backGrab)},
+//         };
 
-        foreach(var entry in keyInputMap){
-            if(Input.GetKeyDown(entry.Key)){
-                EnableGunVisual(entry.Value.Item1);
-                SwithAnimatorLayer(entry.Value.Item2);
-                SwitchingGun(entry.Value.Item3);
-                break;
-            }
-        }
-    }
-}
+//         foreach(var entry in keyInputMap){
+//             if(Input.GetKeyDown(entry.Key)){
+//                 SwitchOnWeaponModel();
+//                 SwithAnimatorLayer(entry.Value.Item1);
+//                 SwitchingGun(entry.Value.Item2);
+//                 break;
+//             }
+//         }
+//     }
+// }
 
 
 
     // Checking Gun Enable and Disable Gun Visual
-    void EnableGunVisual(Transform gun){
-        DisableGunVisual();
-        gun.gameObject.SetActive(true);
-        currentGun = gun;
-       LeftHandTargetTransform();
+    public void SwitchOnWeaponModel(){
+        int aimIndex = (int)player.weapon.CurrentWeapon().weaponType;
+        SwitchOffWeaponModel();
+        SwithAnimatorLayer(aimIndex);
+        GetCurrentWeaponModel().gameObject.SetActive(true);
+
+       AttachLeftHand();
     }
-
-
-    void DisableGunVisual(){
-        foreach(Transform item in gunTransfom){
+    void SwitchOffWeaponModel(){
+        foreach(WeaponModel item in weaponModels){
             item.gameObject.SetActive(false);
         }
     }
 
 
     // Hand Transfromation for each weapon correspoding
-    void LeftHandTargetTransform(){
-        Transform leftHandGunTransform = currentGun.GetComponentInChildren<LeftHandTargetTransform>().transform;
+    void AttachLeftHand(){
+        Transform leftHandGunTransform = GetCurrentWeaponModel().GetComponentInChildren<LeftHandTargetTransform>().transform;
         leftHandIK_Target.localPosition = leftHandGunTransform.localPosition;
         leftHandIK_Target.localRotation = leftHandGunTransform.localRotation;
     }
